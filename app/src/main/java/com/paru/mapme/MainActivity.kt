@@ -2,11 +2,13 @@ package com.paru.mapme
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.paru.mapme.models.Place
 import com.paru.mapme.models.UserMap
 import kotlinx.android.synthetic.main.activity_main.*
 
+private const val TAG="Main Activity"
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,7 +17,11 @@ class MainActivity : AppCompatActivity() {
 
         val userMaps=generateSampleData()
         rvMaps.layoutManager=LinearLayoutManager(this)
-        rvMaps.adapter=MapAdapter(this, userMaps)
+        rvMaps.adapter=MapAdapter(this, userMaps,object:MapAdapter.OnClickListener{
+            override fun onItemClick(position: Int) {
+             Log.i(TAG,"onItemClick $position")
+            }
+        })
     }
     private fun generateSampleData(): List<UserMap> {
         return listOf(
