@@ -2,4 +2,6 @@
     <string name="app_name">MapMe</string>
     <string name="title_activity_display_map">Map</string>
     <string name="title_activity_create_map">Map</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
 </resources>
