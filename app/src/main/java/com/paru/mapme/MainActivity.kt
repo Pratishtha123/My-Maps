@@ -1,5 +1,6 @@
 package com.paru.mapme
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import com.paru.mapme.models.Place
 import com.paru.mapme.models.UserMap
 import kotlinx.android.synthetic.main.activity_main.*
 
+const val EXTRA_USER_MAP="EXTRA_USER_MAP"
 private const val TAG="Main Activity"
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +21,9 @@ class MainActivity : AppCompatActivity() {
         rvMaps.layoutManager=LinearLayoutManager(this)
         rvMaps.adapter=MapAdapter(this, userMaps,object:MapAdapter.OnClickListener{
             override fun onItemClick(position: Int) {
-             Log.i(TAG,"onItemClick $position")
+             val intent=Intent(this@MainActivity,DisplayMapActivity::class.java)
+                intent.putExtra(EXTRA_USER_MAP,userMaps[position])
+                startActivity(intent)
             }
         })
     }
