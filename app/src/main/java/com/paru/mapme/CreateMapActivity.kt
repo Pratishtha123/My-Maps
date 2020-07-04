@@ -4,6 +4,8 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -67,7 +69,16 @@ class CreateMapActivity : AppCompatActivity(), OnMapReadyCallback {
            .show()
 
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener{
-            val marker= mMap.addMarker(MarkerOptions().position(latLng).title("new marker").snippet("a cool snippet!"))
+
+            val title=placeFormView.findViewById<EditText>(R.id.etTitle).text.toString()
+            val description=placeFormView.findViewById<EditText>(R.id.etDescription).text.toString()
+            if (title.trim().isEmpty()||description.trim().isEmpty())
+            {
+                Toast.makeText(this,"Place must have non-empty title and description",Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            val marker= mMap.addMarker(MarkerOptions().position(latLng).title(title).snippet(description))
             markers.add(marker)
             dialog.dismiss()
         }
