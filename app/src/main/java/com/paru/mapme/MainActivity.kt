@@ -1,5 +1,6 @@
 package com.paru.mapme
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,19 +16,23 @@ private const val TAG="Main Activity"
 private const val REQUEST_CODE=1234
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var userMaps:MutableList<UserMap>
+    private lateinit var mapAdapter:MapAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val userMaps=generateSampleData()
+        userMaps=generateSampleData().toMutableList()
         rvMaps.layoutManager=LinearLayoutManager(this)
-        rvMaps.adapter=MapAdapter(this, userMaps,object:MapAdapter.OnClickListener{
+        mapAdapter= MapAdapter(this, userMaps,object:MapAdapter.OnClickListener{
             override fun onItemClick(position: Int) {
              val intent=Intent(this@MainActivity,DisplayMapActivity::class.java)
                 intent.putExtra(EXTRA_USER_MAP,userMaps[position])
                 startActivity(intent)
             }
         })
+        rvMaps.adapter=mapAdapter
         fabCreateMap.setOnClickListener{
             val intent=Intent(this@MainActivity,CreateMapActivity::class.java)
             intent.putExtra(EXTRA_MAP_TITLE,"new map name")
@@ -36,8 +41,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode== REQUEST_CODE && resultCode== REQUEST_CODE){
+        if (requestCode== REQUEST_CODE && resultCode== Activity.RESULT_OK){
             //get new map data from data
+            val userMap=data?.getSerializableExtra(EXTRA_USER_MAP) as UserMap
+            Log.i(TAG,"onActivityResult with new Map title ${userMap.title}")
+            userMaps.add(userMap)
+            mapAdapter.notifyItemInserted(userMaps.size-1)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
