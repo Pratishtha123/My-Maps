@@ -33,9 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val userMapFromFile=deserializeUserMaps(this)
-        userMaps=generateSampleData().toMutableList()
-        userMaps.addAll(userMapFromFile)
+        userMaps=deserializeUserMaps(this).toMutableList()
         rvMaps.layoutManager=LinearLayoutManager(this)
         mapAdapter= MapAdapter(this, userMaps,object:MapAdapter.OnClickListener{
             override fun onItemClick(position: Int) {
