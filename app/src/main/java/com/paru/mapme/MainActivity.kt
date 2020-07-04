@@ -1,11 +1,18 @@
 package com.paru.mapme
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.paru.mapme.models.Place
 import com.paru.mapme.models.UserMap
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,9 +41,33 @@ class MainActivity : AppCompatActivity() {
         })
         rvMaps.adapter=mapAdapter
         fabCreateMap.setOnClickListener{
+            showAlertDialog()
+        }
+    }
+
+    private fun showAlertDialog() {
+
+        val mapFormView= LayoutInflater.from(this).inflate(R.layout.dialog_create_map,null)
+        val dialog= AlertDialog.Builder(this)
+            .setTitle("Map Title")
+            .setView(mapFormView)
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Ok",null)
+            .show()
+
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener{
+
+            val title=mapFormView.findViewById<EditText>(R.id.etTitle).text.toString()
+            if (title.trim().isEmpty())
+            {
+                Toast.makeText(this,"Map must have a non-empty title", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            //navigate to create map activity
             val intent=Intent(this@MainActivity,CreateMapActivity::class.java)
-            intent.putExtra(EXTRA_MAP_TITLE,"new map name")
+            intent.putExtra(EXTRA_MAP_TITLE,title)
             startActivityForResult(intent, REQUEST_CODE)
+            dialog.dismiss()
         }
     }
 
